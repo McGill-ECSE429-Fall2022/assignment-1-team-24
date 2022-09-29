@@ -24,7 +24,7 @@ public class CompletableFutures {
             } catch (Exception e) {
                 errorConsumer.accept(e);
             } finally {
-                ThreadContext.Current.remove();
+                ThreadContext.Current.free();
             }
         }));
     }
@@ -42,7 +42,7 @@ public class CompletableFutures {
             } catch (Exception e) {
                 LOGGER.error("Error handling thenAccept consumer for completable future", e);
             } finally {
-                ThreadContext.Current.remove();
+                ThreadContext.Current.free();
             }
         }));
     }

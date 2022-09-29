@@ -155,7 +155,7 @@ public class RateLimitInvoker extends BaseInvoker {
                 throw e;
             } finally {
                 forkedThreadContext.clear();
-                ThreadContext.Current.remove();
+                ThreadContext.Current.free();
             }
         }, delay, TimeUnit.NANOSECONDS);
     }
