@@ -215,6 +215,7 @@ public class SafeGroovyScriptRunner {
             return null;
         } catch (InterruptedException e) {
             result.cancel(true);
+            Thread.currentThread().interrupt();
             return null;
         } catch (TimeoutException e) {
             result.cancel(true);

@@ -208,7 +208,7 @@ public class Aiode {
             try {
                 Thread.sleep(millisToWait);
             } catch (InterruptedException e) {
-                return;
+                Thread.currentThread().interrupt();
             }
             System.exit(0);
         });
@@ -227,6 +227,7 @@ public class Aiode {
                     try {
                         futureMessage.get();
                     } catch (InterruptedException e) {
+                    	Thread.currentThread().interrupt();
                         break;
                     } catch (ExecutionException e) {
                         continue;

@@ -109,6 +109,7 @@ public class EagerlyScalingThreadPoolExecutor extends ThreadPoolExecutor {
                             this.currentWorker.compareAndSet(Thread.currentThread(), null);
                         } catch (InterruptedException e) {
                             this.currentWorker.compareAndSet(Thread.currentThread(), null);
+                            Thread.currentThread().interrupt();
                         }
                     });
 
