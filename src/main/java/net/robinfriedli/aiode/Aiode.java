@@ -209,6 +209,7 @@ public class Aiode {
                 Thread.sleep(millisToWait);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                return;
             }
             System.exit(0);
         });
