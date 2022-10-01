@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
@@ -20,6 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import se.michaelthelin.spotify.model_objects.specification.ArtistSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Track;
+import net.robinfriedli.aiode.exceptions.NoSpotifyResultsFoundException;
 
 /**
  * Determines the best result from a selection of results based on how popular each artist is on this guild, the edit
@@ -35,8 +37,7 @@ public class SpotifyTrackResultHandler {
         this.session = session;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public Track getBestResult(String searchTerm, Collection<Track> tracks) {
+    public Track getBestResult(String searchTerm, Collection<Track> tracks) throws NoSpotifyResultsFoundException {
         Map<String, Long> playbackCountWithArtistId = getPlaybackCountForArtists(tracks);
         String trackName = extractSearchedTrackName(searchTerm, tracks).toLowerCase();
         LevenshteinDistance levenshteinDistance = LevenshteinDistance.getDefaultInstance();
@@ -69,11 +70,19 @@ public class SpotifyTrackResultHandler {
         }
 
         int bestScore = tracksByScore.keySet().stream().mapToInt(k -> k).max().getAsInt();
-        return tracksByScore
+        final AtomicReference<Track> bestScoringTrackRef = new AtomicReference<Track>();
+
+        tracksByScore
             .get(bestScore)
             .stream()
             .max(Comparator.comparing(Track::getPopularity))
-            .get();
+            .ifPresent(bestScoringTrack -> { bestScoringTrackRef.set(bestScoringTrack); });
+
+        if (bestScoringTrackRef.get() == null) {
+            throw new NoSpotifyResultsFoundException(String.format("No Spotify track found when looking for best scoring track with score '%d'", bestScore));
+        }
+
+        return bestScoringTrackRef.get();
     }
 
     /**
