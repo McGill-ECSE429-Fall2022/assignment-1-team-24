@@ -69,19 +69,19 @@ public class SpotifyTrackResultHandler {
         }
 
         int bestScore = tracksByScore.keySet().stream().mapToInt(k -> k).max().getAsInt();
-        Track bestScoringTrack = null;
+        final AtomicReference<Track> bestScoringTrackRef = new AtomicReference<Track>();
 
         tracksByScore
             .get(bestScore)
             .stream()
             .max(Comparator.comparing(Track::getPopularity))
-            .ifPresent(bestTrack -> { bestScoringTrack = bestTrack; });
+            .ifPresent(bestScoringTrack -> { bestScoringTrackRef.set(bestScoringTrack); });
 
-        if (bestScoringTrack == null) {
+        if (bestScoringTrackRef.get() == null) {
             throw new NoSpotifyResultsFoundException(String.format("No Spotify track found when looking for best scoring track with score '%d'", bestScore));
         }
 
-        return bestScoringTrack;
+        return bestScoringTrackRef.get();
     }
 
     /**
