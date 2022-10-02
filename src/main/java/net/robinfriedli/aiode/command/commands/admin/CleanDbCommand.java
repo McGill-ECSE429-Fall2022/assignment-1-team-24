@@ -58,6 +58,7 @@ public class CleanDbCommand extends AbstractAdminCommand {
                     try {
                         executionQueueManager.joinAll(60000);
                     } catch (InterruptedException e) {
+                    	Thread.currentThread().interrupt();
                         return;
                     }
 

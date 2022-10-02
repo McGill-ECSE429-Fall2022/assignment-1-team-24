@@ -89,6 +89,7 @@ public class CommandMonitoringInterceptor extends AbstractChainableCommandInterc
             } catch (InterruptedException e) {
                 // CommandExecutionInterceptor interrupts monitoring in post command
                 deleteMessages(stillLoadingMessage, warningMessage);
+                Thread.currentThread().interrupt();
             } finally {
                 thread.setName(oldName);
             }

@@ -208,6 +208,7 @@ public class AudioTrafficSimulationCommand extends AbstractAdminCommand {
 
                 Thread.sleep(durationSecs * 1000L);
             } catch (InterruptedException e) {
+            	Thread.currentThread().interrupt();
                 // continue to interrupt threads
             } catch (Exception e) {
                 logger.error("Unexpected exception while managing fake players", e);
@@ -266,6 +267,7 @@ public class AudioTrafficSimulationCommand extends AbstractAdminCommand {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     player.stopTrack();
+                    Thread.currentThread().interrupt();
                     return;
                 }
             }

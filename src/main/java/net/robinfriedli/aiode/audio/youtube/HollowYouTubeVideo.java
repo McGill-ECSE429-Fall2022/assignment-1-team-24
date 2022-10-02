@@ -164,6 +164,7 @@ public class HollowYouTubeVideo extends AbstractSoftCachedPlayable implements Yo
                 return future.get(3, TimeUnit.MINUTES);
             }
         } catch (InterruptedException | ExecutionException e) {
+        	Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
             throw new RuntimeException("Video loading timed out", e);
@@ -176,6 +177,7 @@ public class HollowYouTubeVideo extends AbstractSoftCachedPlayable implements Yo
         try {
             return future.get(time, unit);
         } catch (InterruptedException | ExecutionException e) {
+        	Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         } catch (CancellationException e) {
             throw new UnavailableResourceException();

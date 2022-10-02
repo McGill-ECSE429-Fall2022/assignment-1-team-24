@@ -8,3 +8,8 @@
 /logs/
 /src/main/resources/settings-private.properties
 /derby.log
+# Eclipse files
+/bin/
+.classpath
+.project
+.settings/

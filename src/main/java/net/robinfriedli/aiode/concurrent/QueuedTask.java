@@ -141,6 +141,7 @@ public class QueuedTask implements Runnable {
         try {
             slot = queue.takeSlot();
         } catch (InterruptedException e) {
+        	Thread.currentThread().interrupt();
             return;
         }
 
